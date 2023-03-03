@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ULDeneme.Core\ULDeneme.Core.csproj" />
+    <ProjectReference Include="..\ULDeneme.DAL\ULDeneme.DAL.csproj" />
+    <ProjectReference Include="..\ULDeneme.Model\ULDeneme.Model.csproj" />
+    <ProjectReference Include="..\ULDeneme.ViewModel\ULDeneme.ViewModel.csproj" />
+  </ItemGroup>
+
+</Project>

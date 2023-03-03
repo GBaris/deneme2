@@ -1,0 +1,107 @@
+﻿@model IEnumerable<ULDeneme.Model.Entities.Sozluk>
+@using System.Security.Claims
+
+<style>
+    #createView {
+        display: block;
+    }
+
+    #updateView {
+        display: none;
+    }
+</style>
+
+<h2>Yeni Sozluk Ekle</h2>
+<div class="col">
+    <div class="row">
+        <div id="createView">
+            @Html.Partial("Create", new ULDeneme.ViewModel.SozlukViewModels.SozlukCreateVM())
+        </div>
+        <div id="updateView">
+            @Html.Partial("Update", new ULDeneme.ViewModel.SozlukViewModels.SozlukEditVM())
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <div class="row">
+                <p></p>
+            </div>
+            <div class="row">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Sozluk Adı</th>
+                            <th>Açıklama</th>
+                            <th>Tema</th>
+                            <th>Çeviri Türü</th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model != null && Model.Any())
+                        {
+                            foreach (var sozluk in Model)
+                            {
+                                <tr>
+                                    <td>@sozluk.Name</td>
+                                    <td>@sozluk.Description</td>
+                                    <td>@sozluk.Theme</td>
+                                    <td>@sozluk.TranslationType.Name</td>
+                                    <td>
+                                        <a class="btn btn-primary" onclick="openUpdateView(@sozluk.ID)">Edit</a>
+                                    </td>
+                                    <td>
+                                        <a onclick="openDeleteView(@sozluk.ID)" class="btn btn-danger btn-sm">Delete</a>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="7">Veri yok.</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        $('#createView').show();
+        $('#updateView').hide();
+    });
+
+    function openUpdateView(id) {
+        $.ajax({
+            url: '/Sozluk/Update',
+            data: { id: id },
+            success: function (data) {
+                $('#createView').hide();
+                $('#updateView').html(data);
+                $('#updateView').show();
+            }
+        });
+    }
+
+    function openDeleteView(id) {
+        if (confirm("Are you sure you want to delete this sozluk?")) {
+            $.ajax({
+                url: '/Sozluk/DeleteType',
+                type: 'POST',
+                data: { id: id },
+                success: function (result) {
+                    if (result) {
+                        alert("Sozlukdeleted successfully!");
+                        location.reload();
+                    } else {
+                        alert("Error deleting sozluk: " + data.errorMessage);
+                    }
+                }
+            });
+        }
+    }
+</script>

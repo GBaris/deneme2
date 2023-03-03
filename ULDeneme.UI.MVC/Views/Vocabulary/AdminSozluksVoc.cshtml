@@ -1,0 +1,31 @@
+﻿@model ULDeneme.ViewModel.VocabularyViewModels.VocabularyViewModel
+
+<h1>@ViewData["Title"]</h1>
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.UnKVoc)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.KVoc)
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.VocabularyList)
+        {
+            <tr>
+                <td cl>
+                    @Html.DisplayFor(modelItem => item.UnKVoc)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.KVoc)
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+

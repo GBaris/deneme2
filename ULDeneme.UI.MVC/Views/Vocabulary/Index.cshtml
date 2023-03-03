@@ -1,0 +1,106 @@
+﻿@model ULDeneme.ViewModel.VocabularyViewModels.VocabularyViewModel
+
+<style>
+    #createForm {
+        display: block;
+    }
+    #updateForm {
+        display: none;
+    }
+</style>
+
+<h1>@ViewData["Title"]</h1>
+
+<div id="createForm">
+    @Html.Partial("Create", new ULDeneme.ViewModel.VocabularyViewModels.VocabularyCreateVM())
+</div>
+
+<div id="updateForm">
+    @Html.Partial("Update", new ULDeneme.ViewModel.VocabularyViewModels.VocabularyUpdateVM())
+</div>
+
+<div class="row">
+    <div class="col-8">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.UnKVoc)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.KVoc)
+                    </th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.VocabularyList)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.UnKVoc)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.KVoc)
+                        </td>
+                        <td>
+                            <a class="btn btn-primary btn-sm" onclick="openUpdateView('@item.ID')">Edit</a>
+                        </td>
+                        <td>
+                            <a class="btn btn-danger btn-sm" onclick="openDeleteView('@item.ID')">Delete</a>
+
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <div class="col-4"></div>
+</div>
+
+
+
+<script>
+    function openCreateView() {
+        $('#createForm').show();
+        $('#updateForm').hide();
+        clearFormFields();
+    }
+
+    function openUpdateView(id) {
+        if (!id) {
+            alert("Please select a vocabulary to update.");
+            return;
+        }
+        $.ajax({
+            type: "GET",
+            url: "/Vocabulary/Update",
+            data: { id: id },
+            success: function (data) {
+                $('#createForm').hide();
+                $('#updateForm').html(data);
+                $('#updateForm').show();
+            },
+            error: function (result) {
+                console.log(result);
+            }
+        });
+    }
+
+    function openDeleteView(id) {
+        if (confirm("Are you sure you want to delete this vocabulary?")) {
+            $.ajax({
+                type: "POST",
+                url: "/Vocabulary/Delete",
+                data: { id: id },
+                success: function (result) {
+                    location.reload();
+                },
+                error: function (result) {
+                    console.log(result);
+                }
+            });
+        }
+    }
+</script>

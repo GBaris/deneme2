@@ -1,0 +1,19 @@
+﻿@model ULDeneme.ViewModel.VocabularyViewModels.VocabularyCreateVM
+
+<form asp-action="Create" asp-route-sozlukID="@ViewBag.SozlukID" id="createForm">
+    <div class="row">
+        <div class="form-group col-5">
+            <label asp-for="UnKVoc" class="control-label"></label>
+            <input asp-for="UnKVoc" class="form-control" />
+            <span asp-validation-for="UnKVoc" class="text-danger"></span>
+        </div>
+        <div class="form-group col-5">
+            <label asp-for="KVoc" class="control-label"></label>
+            <input asp-for="KVoc" class="form-control">
+            <span asp-validation-for="KVoc" class="text-danger"></span>
+        </div>
+        <div class="form-group col-2" style="padding-top: 24px">
+            <input type="submit" value="Create" class="btn btn-primary" />
+        </div>
+    </div>
+</form>

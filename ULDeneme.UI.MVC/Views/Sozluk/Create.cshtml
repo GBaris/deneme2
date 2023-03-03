@@ -1,0 +1,83 @@
+﻿@model ULDeneme.ViewModel.SozlukViewModels.SozlukCreateVM
+@using System.Security.Claims
+<form id="sozlukForm" asp-action="Create" asp-controller="Sozluk" method="post">
+    <div class="form-group col">
+        <div class="row">
+            <div class="col-5">
+                <label for="sel1">Select Translation Type:</label>
+                <select class="form-control" id="sel1" asp-for="TranslationTypeID" asp-items="@ViewBag.TranslationTypes">
+                    <option value="0" disabled selected>Çeviri Türü Seçiniz</option>
+                </select>
+                <label for="sozlukTheme">Tema</label>
+                <select class="form-control" asp-for="Theme" id="sozlukTheme">
+                    <option value="0" disabled selected>Tema Seçiniz</option>
+                    <option value="1">Dizi</option>
+                    <option value="2">Film</option>
+                    <option value="3">Mesleki</option>
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <option value="4">Seviye</option>
+                    }
+                </select>
+                <span asp-validation-for="Theme" class="text-danger"></span>
+            </div>
+            <div class="col-5">
+                <label for="sozlukName">Sozluk Adı</label>
+                <input type="text" class="form-control" asp-for="Name" id="sozlukName" placeholder="Sozluk Adını Giriniz">
+                <span asp-validation-for="Name" class="text-danger"></span>
+                <label for="sozlukDescription">Açıklama</label>
+                <input type="text" class="form-control" asp-for="Description" id="sozlukDescription" placeholder="Açıklama Giriniz">
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <div class="col-2 d-flex align-items-center mt-2">
+                <p></p>
+                <input type="hidden" asp-for="UserID" value="@User.FindFirst(ClaimTypes.NameIdentifier)?.Value" />
+                <input type="hidden" asp-for="UserRole" value="@User.FindFirst(ClaimTypes.Role)?.Value" />
+                <button type="submit" class="btn btn-primary w-100 d-block justify-content-center">
+                    Ekle
+                </button>
+            </div>
+        </div>        
+    </div>
+</form>
+<script>
+    // Get references to the form fields and button
+    var sozlukName = document.getElementById("sozlukName");
+    var sozlukDescription = document.getElementById("sozlukDescription");
+    var sozlukTheme = document.getElementById("sozlukTheme");
+    var submitButton = document.getElementsByClassName("btn btn-primary")[0];
+    var selectTranslation = document.getElementById("sel1");
+
+    // Disable the form fields and button
+    sozlukName.disabled = true;
+    sozlukDescription.disabled = true;
+    submitButton.disabled = true;
+
+    // Add event listeners to the select fields
+    selectTranslation.addEventListener("change", enableFields);
+    sozlukTheme.addEventListener("change", enableFields);
+
+    sozlukName.addEventListener("change", enableField2)
+
+    function enableFields() {
+        // Check if the select fields have a value
+        if (selectTranslation.value != 0 && sozlukTheme.value != 0) {
+            // Enable the form fields and button
+            sozlukName.disabled = false;
+        } else {
+            // Disable the form fields and button
+            sozlukName.disabled = true;
+        }
+    }
+
+    function enableField2() {
+        if (sozlukName.value != 0) {
+            sozlukDescription.disabled = false;
+            submitButton.disabled = false;
+        }
+        else {
+            sozlukDescription.disabled = true;
+            submitButton.disabled = true;
+        }
+    }
+</script>

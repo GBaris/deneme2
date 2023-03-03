@@ -1,0 +1,227 @@
+﻿@model List<ULDeneme.ViewModel.QuizTestViewModels.TestResult>
+
+@{
+    ViewData["Title"] = $"{ViewBag.SozlukAdi} - Test Your Vocabulary Knowledge";
+}
+
+<style>
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    h1, h3 {
+        text-align: center;
+    }
+
+    .container {
+        width: 80%;
+        max-width: 800px;
+        margin: 0 auto;
+    }
+
+    .card {
+        border: 1px solid #ccc;
+        margin-bottom: 20px;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+        transition: 0.3s;
+    }
+
+        .card:hover {
+            box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+        }
+
+    .question {
+        font-size: 18px;
+        font-weight: bold;
+    }
+
+    .options {
+        display: flex;
+        flex-direction: column;
+        margin-top: 10px;
+    }
+
+    .option {
+        margin: 5px 0;
+    }
+
+    .actions {
+        position: relative;
+    }
+
+        .actions .next {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+        }
+
+    .submit-button {
+        background-color: #4CAF50;
+        border: none;
+        color: white;
+        padding: 10px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin-top: 20px;
+        border-radius: 10px;
+        cursor: pointer;
+    }
+
+        .submit-button:hover {
+            background-color: #3e8e41;
+        }
+
+    .quiz-card {
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        margin-bottom: 20px;
+    }
+
+        .quiz-card h2 {
+            margin-top: 0;
+        }
+
+        .quiz-card ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+            .quiz-card ul li {
+                margin: 10px 0;
+            }
+
+        .quiz-card .actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+            .quiz-card .actions button {
+                padding: 10px;
+                border: none;
+                border-radius: 5px;
+                background-color: #337ab7;
+                color: #fff;
+                font-size: 16px;
+                cursor: pointer;
+            }
+
+                .quiz-card .actions button:disabled {
+                    opacity: 0.5;
+                    cursor: not-allowed;
+                }
+
+                .quiz-card .actions button:hover {
+                    background-color: #23527c;
+                }
+
+                .quiz-card .actions button:last-child {
+                    background-color: #5cb85c;
+                }
+
+                    .quiz-card .actions button:last-child:hover {
+                        background-color: #449d44;
+                    }
+</style>
+
+<div class="container">
+    <h1>@ViewBag.SozlukAdi</h1>
+    <h3>Test Your Vocabulary Knowledge</h3>
+
+    @if (Model.Count == 0)
+    {
+        <p>There are no words to learn in this vocabulary!</p>
+    }
+    else
+    {
+        <form method="post">
+            @for (int i = 0; i < Model.Count; i++)
+            {
+                var testResult = Model[i];
+                var isFirstCard = i == 0;
+                var isLastCard = i == Model.Count - 1;
+
+                <div class="quiz-card" id="quiz-card-@i" @if (!isFirstCard) { <text> style="display:none;" </text> }>
+                    <h2>@testResult.Question.Word</h2>
+                    <input type="hidden" name="testResultList[@i].Question.Word" value="@testResult.Question.Word" />
+                    <input type="hidden" name="testResultList[@i].CorrectAnswer" value="@testResult.CorrectAnswer" />
+                    <input type="hidden" name="testResultList[@i].Question.Options" value="@string.Join(',', testResult.Question.Options)" />
+                    <input type="hidden" name="sozlukID" value="@ViewBag.SozlukID" />
+
+                    <ul>
+                        @foreach (var option in testResult.Question.Options)
+                        {
+                            <li>
+                                <label>
+                                    <input type="radio" name="testResultList[@i].UserAnswer" value="@option" checked="@(option == testResult.Question.SelectedAnswer)">
+                                    @option
+                                </label>
+                            </li>
+                        }
+                    </ul>
+
+                    <div class="actions">
+                        @if (!isFirstCard)
+                        {
+                            <button class="back" type="button" onclick="showCard(@i - 1)">Back</button>
+                        }
+
+                        @if (isLastCard)
+                        {
+                            <button class="next" type="submit">Complete Test</button>
+                        }
+                        else
+                        {
+                            <button class="next" type="button" onclick="showCard(@i + 1)">Next</button>
+                        }
+                    </div>
+                </div>
+            }
+        </form>
+    }
+</div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    var cards = $('.quiz-card');
+    function showCard(index) {
+        cards.hide();
+        $(cards[index]).show();
+    }
+    showCard(0);
+
+    $('.next').on('click', function () {
+        const index = $(this).closest('.quiz-card').index();
+        showCard(index + 1);
+    });
+
+    $('.back').on('click', function () {
+        const index = $(this).closest('.quiz-card').index();
+        showCard(index - 1);
+    });
+
+    document.addEventListener('keydown', function (event) {
+        const code = event.code || event.key;
+        if (code === 'Space') {
+            // Find the next button and trigger its click event
+            const nextButton = document.querySelector('.quiz-card:not([style*="none"]) .next');
+            if (nextButton) {
+                nextButton.click();
+            }
+        } else if (code === 'Backspace') {
+            // Find the back button and trigger its click event
+            const backButton = document.querySelector('.quiz-card:not([style*="none"]) .back');
+            if (backButton) {
+                backButton.click();
+            }
+        }
+    });
+</script>
+
+
+
+

@@ -1,0 +1,58 @@
+﻿@model ULDeneme.ViewModel.SozlukViewModels.UsersSozluksViewModel
+@using ULDeneme.Model.Enums
+@using System.Security.Claims
+
+<form id="sozlukForm" asp-action="AdminsSozluks" asp-controller="Sozluk" method="post">
+    <div class="form-group col">
+        <div class="row">
+            <div class="col-5">
+                <label for="sel1">Select Translation Type:</label>
+                <select class="form-control" id="sel1" asp-for="TranslationTypeID" asp-items="@ViewBag.TranslationTypes">
+                    <option value="0" disabled selected>Çeviri Türü Seçiniz</option>
+                </select>
+                <span asp-validation-for="TranslationTypeID" class="text-danger"></span>
+            </div>
+            <div class="col-2 d-flex align-items-center mt-2" style="padding-top: 14px">
+                <input type="hidden" asp-for="ThemeID" value="@Model.ThemeID" />
+                <button type="submit" class="btn btn-primary w-100 d-block justify-content-center">
+                    Getir
+                </button>
+            </div>
+        </div>
+    </div>
+</form>
+@if (Model.Sozluks != null)
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Translation Type</th>
+                <th>Theme</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Sozluks)
+            {
+                <tr>
+                    <td>@item.ID</td>
+                    <td>@item.Name</td>
+                    <td>@item.Description</td>
+                    <td>@item.TranslationType.Name</td>
+                    <td>@item.Theme</td>
+                    <td>
+                    <a class="btn btn-secondary" asp-action="AdminSozluksVoc" asp-controller="Vocabulary" asp-route-sozlukID="@item.ID">Look</a>
+                    <a class="btn btn-success" asp-action="Learn" asp-controller="QuizTest" asp-route-sozlukID="@item.ID">Learn</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No Data Found</p>
+}

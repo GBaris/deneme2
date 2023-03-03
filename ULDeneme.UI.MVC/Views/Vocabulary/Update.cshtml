@@ -1,0 +1,30 @@
+﻿@model ULDeneme.ViewModel.VocabularyViewModels.VocabularyUpdateVM
+
+<form asp-action="Update" asp-all-route-data="@ViewBag.UpdateVoc">
+    <div class="row">
+        <div class="form-group col-5">
+            <label asp-for="UnKVoc" class="control-label"></label>
+            <input asp-for="UnKVoc" class="form-control" value="@Model.UnKVoc" />
+            <span asp-validation-for="UnKVoc" class="text-danger"></span>
+        </div>
+        <div class="form-group col-5">
+            <label asp-for="KVoc" class="control-label"></label>
+            <input asp-for="KVoc" class="form-control" value="@Model.KVoc">
+            <span asp-validation-for="KVoc" class="text-danger"></span>
+        </div>
+        <div class="form-group col-2" style="padding-top: 24px">
+            <input type="hidden" asp-for="ID" value="@Model.ID" />
+            <input type="hidden" asp-for="SozlukID" value="@Model.SozlukID" />
+            <input type="submit" value="Update" class="btn btn-primary" />
+            <button type="button" id="cancelUpdate" class="btn btn-secondary">Cancel</button>
+        </div>
+    </div>
+</form>
+<script>
+    $(function () {
+        $("#cancelUpdate").click(function () {
+            $('#updateForm').hide();
+            $('#createForm').show();
+        });
+    });
+</script>

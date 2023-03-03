@@ -1,0 +1,39 @@
+﻿@model List<ULDeneme.ViewModel.QuizTestViewModels.TestResult>
+
+@{
+    ViewData["Title"] = "Learn Result";
+}
+
+<h1>Test Result</h1>
+
+@if (Model.Any(r => !r.IsCorrect))
+{
+    <p>Test completed with some incorrect answers.</p>
+}
+else
+{
+    <p>Congratulations! You have completed the test with all correct answers.</p>
+}
+
+<table class="table table-striped">
+    <thead class="thead-dark">
+        <tr>
+            <th>Word</th>
+            <th>Your Answer</th>
+            <th>Correct Answer</th>
+            <th>Result</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var result in ViewBag.TestResultList)
+        {
+            <tr class="@((result.IsCorrect) ? "table-success" : "table-danger")">
+                <td>@result.Question.Word</td>
+                <td>@result.UserAnswer</td>
+                <td>@result.CorrectAnswer</td>
+                <td>@(result.IsCorrect ? "Correct" : "Incorrect")</td>
+            </tr>
+        }
+    </tbody>
+</table>
+<a class="btn btn-primary" asp-action="Learn" asp-route-sozlukID="@ViewBag.SozlukID">Try Test</a>

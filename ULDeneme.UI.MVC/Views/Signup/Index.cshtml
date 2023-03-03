@@ -1,0 +1,43 @@
+﻿@model ULDeneme.ViewModel.UserViewModels.UserCreateVM
+@{
+    ViewData["Title"] = "Signup";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-4">
+            <h2>Signup</h2>
+            <form asp-controller="Signup" asp-action="Signup" method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <label asp-for="NickName"></label>
+                    <input asp-for="NickName" class="form-control" />
+                    <span asp-validation-for="NickName" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Email"></label>
+                    <input asp-for="Email" class="form-control" type="email" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Password"></label>
+                    <input asp-for="Password" class="form-control" type="password" />
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Signup" class="btn btn-primary" />
+                </div>
+                @if (ViewBag.Error != null)
+                {
+                    <div class="alert alert-danger">
+                        @foreach (var item in ViewBag.Error)
+                        {
+                            <p>@item.Error: @item.Value</p>
+                        }
+
+                    </div>
+                }
+            </form>
+        </div>
+    </div>
+</div>

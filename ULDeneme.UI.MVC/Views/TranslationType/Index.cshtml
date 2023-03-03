@@ -1,0 +1,105 @@
+﻿@model IEnumerable<ULDeneme.Model.Entities.TranslationType>
+@using System.Security.Claims
+@using ULDeneme.Model.Enums
+
+@{
+    ViewData["Title"] = "Çeviri Türlerim";
+}
+<style>
+    #createView {
+        display: block;
+    }
+
+    #updateView {
+        display: none;
+    }
+</style>
+
+
+<h2>@ViewData["Title"]</h2>
+<div class="row">
+    <div class="col">
+
+        <div id="createView">
+            @Html.Partial("Create", new ULDeneme.ViewModel.TranslationTypeViewModels.TranslationTypeCreateVM())
+        </div>
+        <div id="updateView">
+            @Html.Partial("Update", new ULDeneme.ViewModel.TranslationTypeViewModels.TranslationTypeEditVM())
+        </div>
+    </div>
+    <div class="col-9">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Unknown Language</th>
+                    <th>Known Language</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            @if (Model != null && Model.Any())
+            {
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.Name</td>
+                            <td>@item.UnknownLang</td>
+                            <td>@item.KnownLang</td>
+                            <td>
+                                <a onclick="openUpdateView(@item.ID)" class="btn btn-primary btn-sm">Edit</a>
+                                <a onclick="openDeleteView(@item.ID)" class="btn btn-danger btn-sm">Delete</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            }
+            else if (Model == null || !Model.Any())
+            {
+                <div> No data Found</div>
+            }
+        </table>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#createView').show();
+        $('#updateView').hide();
+    });
+
+    function openUpdateView(id) {
+        $.ajax({
+            url: '/TranslationType/UpdatePartial',
+            data: { id: id },
+            success: function (data) {
+                $('#createView').hide();
+                $('#updateView').html(data);
+                $('#updateView').show();
+            }
+        });
+    }
+
+    function openDeleteView(id) {
+        if (confirm("Are you sure you want to delete this translation type?")) {
+            $.ajax({
+                url: '/TranslationType/DeleteType',
+                type: 'POST',
+                data: { id: id },
+                success: function (result) {
+                    if (result) {
+                        alert("Translation type deleted successfully!");
+                        location.reload();
+                    } else {
+                        alert("Error deleting translation type: " + data.errorMessage);
+                    }
+                }
+            });
+        }
+    }
+</script>
+
+
+
+
